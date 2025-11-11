@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t.app_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div id="potato-buddy-container">
+        <div class="potato-speech-bubble" id="potato-speech-bubble">
+        </div>
+        <img src="{{ url_for('static', filename='images/potato_buddy.png') }}" 
+             alt="Potato Buddy" 
+             id="potato-buddy-image">
+    </div>
+
+    <div id="profile-overlay-panel">
+        <button id="profile-overlay-close">&times;</button>
+        {% if current_user.is_authenticated %}
+            <h3>{{ t.profile_overlay_title }}</h3>
+            <p><strong>Email:</strong> {{ current_user.email }}</p>
+            <p><strong>{{ t.profile_overlay_name }}</strong> {{ current_user.first_name or t.profile_overlay_not_set }}</p>
+            <p><strong>{{ t.profile_overlay_surname }}</strong> {{ current_user.last_name or t.profile_overlay_not_set }}</p>
+            <a href="#" class="tab-button" id="overlay-edit-button" data-tab="tab-profile-edit">{{ t.profile_overlay_edit_btn }}</a>
+        {% endif %}
+    </div>
+
+
+    <div class="app-container">
+
+        <nav class="top-nav">
+            <div class="nav-brand">
+                <h1>{{ t.nav_title }}</h1>
+            </div>
+            
+            <ul class="nav-links">
+                <li>
+                    <a href="#" class="tab-button active" data-tab="tab-home">
+                        {{ t.nav_home }}
+                    </a>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#">{{ t.nav_classic }}</a>
+                    <ul class="dropdown-menu">
+                        {% for recipe in classic_recipes %}
+                            <li>
+                                <a href="#" 
+                                   class="tab-button"
+                                   data-tab="recipe-{{ recipe.id }}">
+                                    {{ recipe.title_en if lang == 'en' else recipe.title_uk }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#">{{ t.nav_world }}</a>
+                    <ul class="dropdown-menu">
+                        {% for recipe in world_recipes %}
+                            <li>
+                                <a href="#" 
+                                   class="tab-button" 
+                                   data-tab="recipe-{{ recipe.id }}">
+                                    {{ recipe.title_en if lang == 'en' else recipe.title_uk }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-dropdown">
+                    <a href="#">{{ t.nav_soups }}</a>
+                    <ul class="dropdown-menu">
+                        {% for recipe in soup_recipes %}
+                            <li>
+                                <a href="#" 
+                                   class="tab-button" 
+                                   data-tab="recipe-{{ recipe.id }}">
+                                    {{ recipe.title_en if lang == 'en' else recipe.title_uk }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="tab-button" data-tab="tab-calculator">
+                        {{ t.nav_calculator }}
+                    </a>
+                </li>
+            </ul>
+
+            <div class="nav-auth">
+                {% if current_user.is_authenticated %}
+                    <a href="#" id="nav-profile-button">{{ current_user.first_name or t.nav_profile }}</a>
+                    <a href="{{ url_for('logout') }}">{{ t.nav_logout }}</a>
+                {% else %}
+                    <a href="#" class="tab-button" data-tab="tab-login">{{ t.nav_login }}</a>
+                    <a href="#" class="tab-button" data-tab="tab-register">{{ t.nav_register }}</a>
+                {% endif %}
+            </div>
+
+            <div class="lang-switcher">
+                <a href="/set_lang/uk" class="{% if lang == 'uk' %}active{% endif %}">UK</a>
+                <a href="/set_lang/en" class="{% if lang == 'en' %}active{% endif %}">EN</a>
+            </div>
+        </nav>
+
+        <main class="content-area">
+            
+            <div id="tab-home" class="recipe-content-panel static-panel active">
+                <div class="welcome-container">
+                    <h2>{{ t.welcome_title }}</h2>
+                    <p>{{ t.welcome_text }}</p>
+
+                    <div class="home-images-wrapper">
+                        <div class="home-image-container">
+                            <img src="{{ url_for('static', filename='images/home_img1.jpg') }}" alt="Home Image 1">
+                        </div>
+                        <div class="home-image-container">
+                            <img src="{{ url_for('static', filename='images/home_img2.jpg') }}" alt="Home Image 2">
+                        </div>
+                    </div>
+                </div>
+                <p class="email-display">jenagoshenko@gmail.com</p>
+            </div>
+
+            <div id="tab-login" class="recipe-content-panel static-panel">
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages-container">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <h2>{{ t.login_title }}</h2>
+                <form action="{{ url_for('login') }}" method="POST" class="auth-form">
+                    <label for="login-email">{{ t.email_label }}</label>
+                    <input type="email" name="email" id="login-email" required>
+                    <label for="login-password">{{ t.password_label }}</label>
+                    <input type="password" name="password" id="login-password" required>
+                    <button type="submit">{{ t.nav_login }}</button>
+                </form>
+            </div>
+
+            <div id="tab-register" class="recipe-content-panel static-panel">
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-messages-container">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <h2>{{ t.register_title }}</h2>
+                <form action="{{ url_for('register') }}" method="POST" class="auth-form">
+                    <label for="register-email">{{ t.email_label }}</label>
+                    <input type="email" name="email" id="register-email" required>
+                    <label for="register-password">{{ t.password_label }}</label>
+                    <input type="password" name="password" id="register-password" required>
+                    <label for="register-confirm-password">{{ t.confirm_password_label }}</label>
+                    <input type="password" name="confirm_password" id="register-confirm-password" required>
+                    <button type="submit">{{ t.nav_register }}</button>
+                </form>
+            </div>
+
+            <div id="tab-profile-edit" class="recipe-content-panel static-panel">
+                <h2>{{ t.profile_title }}</h2>
+                {% if current_user.is_authenticated %}
+                <form action="{{ url_for('update_profile') }}" method="POST" class="auth-form">
+                    <label for="profile-email">{{ t.email_label }}</label>
+                    <input type="email" name="email" id="profile-email" value="{{ current_user.email }}" disabled>
+                    <label for="profile-first-name">{{ t.profile_first_name }}</label>
+                    <input type="text" name="first_name" id="profile-first-name" value="{{ current_user.first_name or '' }}">
+                    <label for="profile-last-name">{{ t.profile_last_name }}</label>
+                    <input type="text" name="last_name" id="profile-last-name" value="{{ current_user.last_name or '' }}">
+                    <button type="submit">{{ t.profile_button_save }}</button>
+                </form>
+                {% endif %}
+            </div>
+
+            <div id="tab-calculator" class="recipe-content-panel static-panel">
+                <h2>{{ t.calculator_title }}</h2>
+                <div class="calculator-form">
+                    <label for="recipe-select">{{ t.calculator_select }}</label>
+                    <select id="recipe-select">
+                        <option value="">{{ t.calculator_select_default }}</option>
+                        {% for recipe in all_recipes %}
+                        <option value="{{ recipe.id }}" 
+                                data-portions="{{ recipe.base_portions }}" 
+                                data-ingredients='{{ (recipe.ingredients_en if lang == 'en' else recipe.ingredients_uk) | tojson | safe }}'>
+                            {{ recipe.title_en if lang == 'en' else recipe.title_uk }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    
+                    <div id="calculator-inputs" style="display:none;">
+                        <p>{{ t.calculator_base_text_1 }} <strong id="base-portions-text">4</strong> {{ t.calculator_base_text_2 }}</p>
+                        <label for="desired-portions">{{ t.calculator_portions_label }}</label>
+                        <input type="number" id="desired-portions" value="4" min="1">
+                        <button id="calculate-btn">{{ t.calculator_button }}</button>
+                    </div>
+                </div>
+                
+                <div id="calculator-results-wrapper">
+                    <div id="calculator-results">
+                        </div>
+                    <div id="calculator-nutrition-results">
+                        </div>
+                </div>
+            </div>
+
+            {% for recipe in all_recipes %}
+            <div id="recipe-{{ recipe.id }}" class="recipe-content-panel">
+                
+                <div class="recipe-grid-container">
+                    
+                    <div class="grid-item grid-item-1">
+                        <h2>{{ recipe.title_en if lang == 'en' else recipe.title_uk }}</h2>
+                        <img src="{{ url_for('static', filename=recipe.image) }}" alt="{{ recipe.title_en if lang == 'en' else recipe.title_uk }}">
+                    </div>
+                    
+                    <div class="grid-item grid-item-2">
+                        <h3>{{ t.recipe_ingredients_title }} ({{ t.calculator_base_text_1 }} {{ recipe.base_portions }} {{ t.recipe_portions }}):</h3>
+                        {% set ingredients = recipe.ingredients_en if lang == 'en' else recipe.ingredients_uk %}
+                        <ul>
+                            {% for item in ingredients %}
+                                <li>
+                                    {{ item.name }}: 
+                                    <strong>
+                                        {% if item.amount > 0 %}{{ item.amount }}{% endif %}
+                                        {{ item.unit }}
+                                    </strong>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <div class="grid-item grid-item-3">
+                        <h3>{{ t.recipe_instructions }}</h3>
+                        <p class="instructions">
+                            {% if lang == 'en' %}
+                                {{ recipe.instructions_en | replace('\n', '<br>') | safe }}
+                            {% else %}
+                                {{ recipe.instructions_uk | replace('\n', '<br>') | safe }}
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="grid-item grid-item-4 reviews-section">
+                        <h3>{{ t.reviews_title }}</h3>
+                        
+                        {% if current_user.is_authenticated %}
+                            <form action="{{ url_for('add_review', recipe_id=recipe.id) }}" 
+                                method="POST" 
+                                enctype="multipart/form-data" 
+                                class="review-form">
+                                
+                                <label for="review_text_{{ recipe.id }}">{{ t.reviews_label_text }}</label>
+                                <textarea id="review_text_{{ recipe.id }}" name="review_text" rows="4" required></textarea>
+                                
+                                <label for="review_photo_{{ recipe.id }}">{{ t.reviews_label_photo }}</label>
+                                <input type="file" id="review_photo_{{ recipe.id }}" name="review_photo" accept="image/*">
+                                
+                                <button type="submit">{{ t.reviews_button }}</button>
+                            </form>
+                        {% else %}
+                            <p class="reviews-login-prompt">{{ t.reviews_login_prompt }}</p>
+                        {% endif %}
+
+
+                        <h3>{{ t.reviews_existing_title }} ({{ recipe.reviews|length }})</h3>
+                        <div class="review-list">
+                            {% if recipe.reviews %}
+                                {% for review in recipe.reviews|reverse %}
+                                    <div class="review-item">
+                                        <strong class="review-author">
+                                            {{ review.author.first_name or review.author.email }}
+                                        </strong>
+                                        <p class="review-text">{{ review.text }}</p>
+                                        {% if review.photo %}
+                                            <img src="{{ url_for('static', filename=review.photo) }}" 
+                                                 alt="Фото отзыва" 
+                                                 class="review-photo">
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>{{ t.reviews_none }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </main>
+    </div>
+
+    <script>
+        const t = {{ t | tojson | safe }};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // ... (Код Potato Buddy) ...
+            const potatoBuddy = document.getElementById('potato-buddy-container');
+            const potatoBubble = document.getElementById('potato-speech-bubble');
+            let potatoTimeout; 
+            function showPotatoMessage(message, duration = 4000) {
+                clearTimeout(potatoTimeout);
+                potatoBubble.textContent = message;
+                potatoBubble.classList.add('show');
+                potatoBuddy.classList.add('show'); 
+                potatoTimeout = setTimeout(() => {
+                    potatoBubble.classList.remove('show');
+                }, duration);
+            }
+            
+            // ... (Код випадаючих меню) ...
+            const dropdowns = document.querySelectorAll('.nav-dropdown > a');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    const menu = dropdown.nextElementSibling;
+                    document.querySelectorAll('.dropdown-menu.show').forEach(m => {
+                        if (m !== menu) m.classList.remove('show');
+                    });
+                    menu.classList.toggle('show');
+                });
+            });
+            window.addEventListener('click', (e) => {
+                if (!e.target.matches('.nav-dropdown > a')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(m => {
+                        m.classList.remove('show');
+                    });
+                }
+            });
+
+            // ... (Код активації вкладок) ...
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const contentPanels = document.querySelectorAll('.recipe-content-panel');
+            function activateTab(tabId) {
+                const targetButton = document.querySelector(`.tab-button[data-tab='${tabId}']`);
+                const targetPanel = document.getElementById(tabId);
+                
+                if (targetPanel) {
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    contentPanels.forEach(panel => panel.classList.remove('active'));
+                    
+                    if (targetButton) {
+                         targetButton.classList.add('active');
+                    }
+                    targetPanel.classList.add('active');
+                    
+                    document.querySelectorAll('.dropdown-menu.show').forEach(m => {
+                        m.classList.remove('show');
+                    });
+                }
+            }
+            tabButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    const targetId = button.getAttribute('data-tab');
+                    activateTab(targetId);
+                    
+                    if (targetId.startsWith('recipe-')) {
+                        showPotatoMessage(t.potato_switch_tab, 3000);
+                    }
+                });
+            });
+
+            // ... (Код Калькулятора) ...
+            const recipeSelect = document.getElementById('recipe-select');
+            const calculatorInputs = document.getElementById('calculator-inputs');
+            const basePortionsText = document.getElementById('base-portions-text');
+            const desiredPortionsInput = document.getElementById('desired-portions');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultsDiv = document.getElementById('calculator-results');
+            const nutritionResultsDiv = document.getElementById('calculator-nutrition-results'); 
+            let currentIngredients = [];
+            let currentBasePortions = 1;
+            recipeSelect.addEventListener('change', (e) => {
+                const selectedOption = e.target.selectedOptions[0];
+                if (!selectedOption.value) {
+                    calculatorInputs.style.display = 'none';
+                    resultsDiv.innerHTML = '';
+                    nutritionResultsDiv.innerHTML = ''; 
+                    return;
+                }
+                currentIngredients = JSON.parse(selectedOption.getAttribute('data-ingredients'));
+                currentBasePortions = parseInt(selectedOption.getAttribute('data-portions'), 10);
+                basePortionsText.textContent = currentBasePortions;
+                desiredPortionsInput.value = currentBasePortions;
+                calculatorInputs.style.display = 'block';
+                resultsDiv.innerHTML = '';
+                nutritionResultsDiv.innerHTML = ''; 
+            });
+            calculateBtn.addEventListener('click', () => {
+                const desiredPortions = parseInt(desiredPortionsInput.value, 10);
+                if (desiredPortions < 1) return;
+                if (desiredPortions > 10) {
+                    showPotatoMessage(t.potato_calc_many.replace('{portions}', desiredPortions), 5000);
+                } else if (desiredPortions < currentBasePortions) {
+                    showPotatoMessage(t.potato_calc_few, 4000);
+                }
+                const factor = desiredPortions / currentBasePortions;
+                let htmlResult = `<h3>${t.calculator_results_title_1} ${desiredPortions} ${t.calculator_results_title_2}</h3><ul>`;
+                let totalProtein = 0;
+                let totalFats = 0;
+                let totalCarbs = 0;
+                currentIngredients.forEach(item => {
+                    let newAmount = item.amount * factor;
+                    totalProtein += (item.p || 0) * factor;
+                    totalFats += (item.f || 0) * factor;
+                    totalCarbs += (item.c || 0) * factor;
+                    if ((item.name.toLowerCase().includes("масло") || item.name.toLowerCase().includes("butter")) && newAmount > 200) {
+                        showPotatoMessage(t.potato_calc_butter, 5000);
+                    }
+                    if (item.amount === 0) {
+                        htmlResult += `<li>${item.name}: <strong>${item.unit}</strong></li>`;
+                    } else {
+                        newAmount = Math.round(newAmount * 10) / 10;
+                        htmlResult += `<li>${item.name}: <strong>${newAmount} ${item.unit}</strong></li>`;
+                    }
+                });
+                htmlResult += '</ul>';
+                resultsDiv.innerHTML = htmlResult;
+                let nutritionHtmlResult = `
+                    <h3>${t.calculator_nutrition_title} (${t.nutrition_total} ${desiredPortions} ${t.recipe_portions})</h3>
+                    <div class="nutrition-grid">
+                        <div class="nutrition-item protein"><span class="nutrition-label">${t.nutrition_protein}</span><span class="nutrition-value">${Math.round(totalProtein)}${t.nutrition_unit}</span></div>
+                        <div class="nutrition-item fat"><span class="nutrition-label">${t.nutrition_fats}</span><span class="nutrition-value">${Math.round(totalFats)}${t.nutrition_unit}</span></div>
+                        <div class="nutrition-item carbs"><span class="nutrition-label">${t.nutrition_carbs}</span><span class="nutrition-value">${Math.round(totalCarbs)}${t.nutrition_unit}</span></div>
+                    </div>`;
+                nutritionResultsDiv.innerHTML = nutritionHtmlResult;
+            });
+            
+            // ... (Код Спливаючих Підказок (Toast)) ...
+            const facts = [ t.fact_1, t.fact_2, t.fact_3 ];
+            const ads = [
+                { text: t.ad_1, linkTab: "recipe-4" }, 
+                { text: t.ad_2, linkTab: "tab-calculator" }
+            ];
+            const allTips = facts.map(fact => ({ text: fact, linkTab: null })).concat(ads);
+            function showRandomTip() {
+                if (potatoBubble.classList.contains('show')) return;
+                const tip = allTips[Math.floor(Math.random() * allTips.length)];
+                const toast = document.createElement('div');
+                toast.className = 'toast-notification';
+                toast.innerHTML = `<p>${tip.text}</p><button class="toast-close">&times;</button>`;
+                if (tip.linkTab) toast.classList.add('clickable');
+                document.body.appendChild(toast);
+                setTimeout(() => toast.classList.add('show'), 100);
+                toast.addEventListener('click', (e) => {
+                    if (e.target.className === 'toast-close') return;
+                    if (tip.linkTab) {
+                        activateTab(tip.linkTab); 
+                        toast.classList.remove('show');
+                        setTimeout(() => toast.remove(), 300);
+                    }
+                });
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                });
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.classList.remove('show');
+                        setTimeout(() => {
+                            if (toast.parentNode) toast.remove();
+                        }, 500);
+                    }
+                }, 10000); 
+            }
+            setInterval(showRandomTip, 180000);
+            
+            setTimeout(() => {
+                showPotatoMessage(t.potato_greeting, 5000);
+            }, 2000);
+
+            // ... (Код Профілю (один/подвійний клік)) ...
+            const profileButton = document.getElementById('nav-profile-button');
+            const overlayPanel = document.getElementById('profile-overlay-panel');
+            const overlayClose = document.getElementById('profile-overlay-close');
+            let clickTimer = null;
+            if (profileButton) {
+                profileButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (clickTimer) {
+                        clearTimeout(clickTimer);
+                        clickTimer = null;
+                        activateTab('tab-profile-edit');
+                        overlayPanel.classList.remove('show'); 
+                    } else {
+                        clickTimer = setTimeout(() => {
+                            clickTimer = null;
+                            overlayPanel.classList.add('show'); 
+                        }, 300); 
+                    }
+                });
+            }
+            if (overlayClose) {
+                overlayClose.addEventListener('click', () => {
+                    overlayPanel.classList.remove('show');
+                });
+            }
+            const overlayEditButton = document.getElementById('overlay-edit-button');
+            if (overlayEditButton) {
+                overlayEditButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    activateTab('tab-profile-edit');
+                    overlayPanel.classList.remove('show');
+                });
+            }
+
+            // 🆕 ЛОГІКА ДЛЯ АКТИВАЦІЇ ВКЛАДКИ ПРИ ПОМИЛЦІ
+            // (Цей код ми отримали з app.py)
+            const errorTab = '{{ error_tab or '' }}';
+            if (errorTab) {
+                activateTab(errorTab);
+            }
+
+        });
+    </script>
+
+</body>
+</html>

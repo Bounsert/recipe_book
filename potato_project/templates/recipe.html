@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ recipe.title if recipe else "Рецепт не найден" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <a href="/" class="back-link">← Назад ко всем рецептам</a>
+        <h1>{{ recipe.title if recipe else "Ошибка 404" }}</h1>
+    </header>
+
+    <main class="recipe-detail">
+        {% if recipe %}
+            <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+            
+            <div class="recipe-content">
+                <h2>Ингредиенты:</h2>
+                <ul>
+                    {% for ingredient in recipe.ingredients %}
+                        <li>{{ ingredient }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h2>Инструкция:</h2>
+                <p class="instructions">{{ recipe.instructions | replace('\n', '<br>') | safe }}</p>
+            </div>
+
+        {% else %}
+            <p>Упс! Рецепт с таким ID не найден.</p>
+        {% endif %}
+    </main>
+
+</body>
+</html>

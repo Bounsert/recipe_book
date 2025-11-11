@@ -1,0 +1,805 @@
+/* Общие стили */
+body, html {
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #f0eade; 
+    color: #333;
+}
+
+/* 1. Контейнер Flexbox (вертикальный) */
+.app-container {
+    display: flex;
+    flex-direction: column; 
+    height: 100vh; 
+}
+
+/* =========================================
+== СТИЛИ ДЛЯ ВЕРХНЕЙ ПАНЕЛИ (ЧЕРНАЯ) ==
+=========================================
+*/
+.top-nav {
+    width: 100%;
+    height: 70px; 
+    background-color: #000000;
+    padding: 0 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    box-sizing: border-box; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0; 
+}
+
+.nav-brand h1 {
+    font-size: 1.8em;
+    color: #ffffff;
+    margin: 0;
+    font-family: "Arial Black", Gadget, sans-serif;
+}
+
+/* Список ссылок */
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    height: 100%;
+    flex-grow: 1; 
+    justify-content: center; 
+}
+
+.nav-links > li {
+    position: relative; 
+    height: 100%;
+    display: flex; 
+    align-items: center; 
+    margin: 0 5px; 
+}
+
+.nav-links > li > a {
+    display: flex;
+    align-items: center;
+    height: 70%; 
+    padding: 0 20px;
+    font-size: 1em; 
+    font-weight: 500;
+    color: #ffffff; 
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-radius 0.2s ease;
+    border-radius: 30px; 
+    background-color: transparent;
+    font-family: "Arial Black", Gadget, sans-serif; 
+}
+.nav-links > li > a:hover {
+    background-color: #333333; 
+}
+
+/* Выпадающее меню */
+.dropdown-menu {
+    display: none; 
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 10px; 
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
+    min-width: 250px;
+    z-index: 100;
+    overflow: hidden; 
+}
+.nav-dropdown {
+    justify-content: center;
+}
+.nav-dropdown .dropdown-menu {
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + 5px);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+
+.dropdown-menu.show {
+    display: block; 
+}
+
+.dropdown-menu li a {
+    display: block;
+    padding: 12px 20px;
+    font-size: 1em;
+    font-weight: 400;
+    color: #333; 
+    text-decoration: none;
+    white-space: nowrap; 
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-radius: 20px; 
+    margin: 0 5px; 
+    font-family: "Times New Roman", Times, serif;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #e0e0e0; 
+    color: #000;
+}
+
+.tab-button {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Активная кнопка в выпадающем меню */
+.dropdown-menu .tab-button.active {
+    color: #b94627 !important; 
+    font-weight: 700 !important;
+    background-color: #f0f0f0 !important; 
+}
+
+/* Активная кнопка на главной панели (Головна, Калькулятор) */
+.nav-links > li > a.tab-button.active {
+    background-color: #333333; 
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+
+/* СТИЛИ ДЛЯ АВТЕНТИФИКАЦИИ И ЯЗЫКА */
+.nav-auth {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: 20px; 
+}
+.nav-auth a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 15px;
+    font-weight: 500;
+    border-radius: 20px;
+    transition: background-color 0.2s ease;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 0.9em; 
+}
+.nav-auth a:hover {
+    background-color: #333;
+}
+#nav-profile-button {
+    font-weight: 600;
+    border: 1px solid #fff;
+}
+
+
+.lang-switcher {
+    display: flex;
+    align-items: center;
+    margin-left: 15px; 
+}
+.lang-switcher a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 5px 10px;
+    font-weight: 500;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 0.9em;
+}
+.lang-switcher a:hover {
+    background-color: #333;
+}
+.lang-switcher a.active {
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+
+/* СТИЛИ ДЛЯ ОВЕРЛЕЙ-ПАНЕЛИ ПРОФИЛЯ */
+#profile-overlay-panel {
+    position: fixed;
+    top: 70px; 
+    right: 0;
+    width: 350px; 
+    height: calc(100vh - 70px);
+    background-color: #fdfdfd;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+    z-index: 999; 
+    padding: 30px;
+    box-sizing: border-box;
+    transform: translateX(100%);
+    transition: transform 0.4s ease-in-out;
+}
+#profile-overlay-panel.show {
+    transform: translateX(0); 
+}
+#profile-overlay-panel h3 {
+    margin-top: 0;
+    font-size: 1.8em;
+    color: #b94627;
+}
+#profile-overlay-panel p {
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+#profile-overlay-panel #overlay-edit-button {
+    display: inline-block;
+    width: auto;
+    background-color: #ffc107;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 0.9em;
+}
+#profile-overlay-panel #overlay-edit-button:hover {
+    background-color: #e0a800;
+}
+
+#profile-overlay-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2em;
+    color: #aaa;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: "Times New Roman", Times, serif;
+}
+
+
+/* 4. Стилизация области контента */
+.content-area {
+    flex: 1; 
+    padding: 40px;
+    background-color: #ffffff;
+    overflow-y: auto; 
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* 5. Стилизация панели с рецептом */
+.recipe-content-panel {
+    display: none; 
+}
+.recipe-content-panel.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ========================================
+  == 🆕 СТИЛІ ДЛЯ FLASH-ПОВІДОМЛЕНЬ (ОНОВЛЕНО) ==
+  ========================================
+*/
+.flash-messages-container {
+    /* Прибрано: position: absolute, top, left, transform
+      Тепер це звичайний блок, який знаходиться всередині
+      вкладки "Вхід" або "Реєстрація".
+    */
+    width: 100%;
+    max-width: 800px; /* Співпадає з .static-panel */
+    z-index: 1001; 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 auto 20px auto; /* Центруємо і додаємо відступ знизу */
+    box-sizing: border-box;
+}
+.flash-message {
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1em;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.flash-message.danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+
+/* === CSS Grid для макета рецепта === */
+.recipe-grid-container {
+    display: grid;
+    grid-template-columns: 2fr 3fr; 
+    grid-template-rows: auto auto auto; 
+    gap: 30px; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    height: calc(100% - 40px);
+}
+.grid-item-1 {
+    grid-column: 1 / 2; 
+    grid-row: 1 / 2;    
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+}
+.grid-item-2 {
+    grid-column: 1 / 2; 
+    grid-row: 2 / 3;    
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+}
+.grid-item-3 {
+    grid-column: 2 / 3; 
+    grid-row: 1 / 3;    
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    overflow-y: auto; 
+}
+.grid-item-4 {
+    grid-column: 1 / 3; 
+    grid-row: 3 / 4;    
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    overflow-y: auto; 
+}
+
+.grid-item h2 {
+    margin-top: 0;
+    font-size: 2.2em;
+    color: #b94627;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+.grid-item img {
+    max-width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 15px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.grid-item h3 {
+    font-size: 1.5em;
+    border-bottom: 1px solid #ffc107;
+    padding-bottom: 5px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.grid-item ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+}
+.grid-item ul li {
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+.grid-item .instructions {
+    white-space: pre-wrap;
+    line-height: 1.6;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/* СТИЛИ ДЛЯ СТАТИЧНЫХ СТРАНИЦ (Калькулятор, Логин, Регистрация) */
+.static-panel {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+    line-height: 1.7;
+}
+.static-panel h2 {
+    text-transform: uppercase;
+    text-align: center; /* Центруємо заголовки вкладок */
+    margin-bottom: 25px; /* Додаємо відступ */
+}
+
+/* СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ */
+#tab-home.static-panel {
+    max-width: none;
+    text-align: center;
+}
+
+#tab-home .welcome-container {
+    text-align: center;
+    padding: 80px 20px;
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+#tab-home .welcome-container h2 {
+    text-transform: none; 
+    font-size: 2.8em;
+    color: #333;
+}
+#tab-home .welcome-container p {
+    font-size: 1.3em;
+    color: #555;
+}
+
+.home-images-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 30px; 
+    margin-top: 40px;
+    margin-bottom: 40px;
+    flex-wrap: wrap; 
+}
+
+.home-image-container {
+    flex: 1; 
+    min-width: 300px; 
+    max-width: 550px; 
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.home-image-container img {
+    width: 100%;
+    height: 350px; 
+    object-fit: cover; 
+    display: block;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.email-display {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #555;
+    margin-top: 100px; 
+    padding-bottom: 40px; 
+    text-align: center; 
+}
+
+
+/* СТИЛИ ДЛЯ ФОРМ ВХОДА/РЕГИСТРАЦИИ */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+.auth-form label {
+    font-weight: 500;
+    font-size: 1.1em;
+}
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="text"] {
+    padding: 12px;
+    font-size: 1.1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+}
+.auth-form button {
+    background-color: #ffc107;
+    color: #333;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.1em;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-family: inherit;
+}
+.auth-form button:hover {
+    background-color: #e0a800;
+}
+
+
+/* СТИЛИ ДЛЯ КАЛЬКУЛЯТОРА */
+.calculator-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+.calculator-form label {
+    font-weight: 500;
+    font-size: 1.1em;
+}
+.calculator-form select, 
+.calculator-form input {
+    padding: 10px;
+    font-size: 1.1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+}
+.calculator-form button {
+    background-color: #ffc107;
+    color: #333;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.1em;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-self: flex-start;
+    font-family: inherit;
+}
+.calculator-form button:hover {
+    background-color: #e0a800;
+}
+
+/* СТИЛІ ДЛЯ РЕЗУЛЬТАТІВ КАЛЬКУЛЯТОРА */
+#calculator-results-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+#calculator-results {
+    flex: 2; 
+    padding: 15px;
+    background-color: #fdfdfd;
+    border-left: 5px solid #ffc107;
+}
+#calculator-results ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#calculator-nutrition-results {
+    flex: 1; 
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+#calculator-nutrition-results h3 {
+    font-size: 1.2em; 
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+.nutrition-grid {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+.nutrition-item .nutrition-label {
+    display: block;
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 5px;
+}
+.nutrition-item .nutrition-value {
+    display: block;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+.nutrition-item.protein .nutrition-value {
+    color: #e63946; 
+}
+.nutrition-item.fat .nutrition-value {
+    color: #f4a261; 
+}
+.nutrition-item.carbs .nutrition-value {
+    color: #2a9d8f; 
+}
+
+
+/* СТИЛИ ДЛЯ СЕКЦИИ ОТЗЫВОВ */
+.reviews-section {
+    padding-top: 0;
+    border-top: none;
+    margin: 0;
+}
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+.review-form label {
+    font-weight: 500;
+    font-size: 1.1em;
+}
+.review-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 1em;
+    box-sizing: border-box; 
+    font-family: inherit;
+}
+.review-form input[type="file"] {
+    font-size: 0.9em;
+    font-family: inherit;
+}
+.review-form button {
+    background-color: #ffc107; 
+    color: #333;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.1em;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-self: flex-start; 
+    font-family: inherit;
+}
+.review-form button:hover {
+    background-color: #e0a800;
+}
+
+.reviews-login-prompt {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #b94627;
+    text-align: center;
+    background-color: #fdfdfd;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.review-list {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.review-item {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.review-author {
+    display: block;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.review-text {
+    font-size: 1em; 
+    line-height: 1.6;
+    margin-top: 0;
+    white-space: pre-wrap; 
+}
+.review-photo {
+    max-width: 300px; 
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+}
+
+/* СТИЛИ ДЛЯ СПЛИВАЮЧИХ ПОДСКАЗОК (TOAST) */
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #fff;
+    color: #333;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 300px;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+.toast-notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+.toast-notification p {
+    margin: 0;
+    padding-right: 20px;
+    font-size: 0.95em;
+}
+.toast-close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 1.5em;
+    color: #aaa;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: "Times New Roman", Times, serif;
+}
+.toast-close:hover {
+    color: #333;
+}
+.toast-notification.clickable {
+    cursor: pointer;
+}
+.toast-notification.clickable:hover {
+    background-color: #f4f4f4;
+}
+
+/* СТИЛИ ДЛЯ POTATO BUDDY */
+#potato-buddy-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 998; 
+    transform: translateY(150%);
+    transition: transform 0.5s ease-in-out;
+}
+#potato-buddy-container.show {
+    transform: translateY(0);
+}
+#potato-buddy-image {
+    width: 100px; 
+    height: auto;
+    display: block;
+}
+.potato-speech-bubble {
+    position: absolute;
+    bottom: 110px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 0.9em;
+    width: 180px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    border-bottom-left-radius: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.potato-speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-top-color: #fff;
+}
+.potato-speech-bubble.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
